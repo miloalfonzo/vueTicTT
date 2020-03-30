@@ -4,6 +4,7 @@
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
+    
 }
 
 .header{
@@ -16,10 +17,11 @@
     background-color: rgb(197, 89, 105);
     margin-top: 20px;
     height: 400px;
-    width:50%;
+    width:40%;
     border-radius: 5%;
-    display: inline-block
-}
+    color: white;
+    display: inline-block;
+} 
 
 .contenido{
     color: white;
@@ -28,7 +30,7 @@
    font-weight: bold;
 }
 
-.modoSolo, .modoVs{
+.modoSolo, .modoVs, .repetirJuego{
     padding: 20px;
     border-radius: 3%;
     border: none;
@@ -37,6 +39,21 @@
     margin: 4px 0 0 4px;
 }
 
+
 .celda{
-    background-color:rgb(20, 11, 11);
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    cursor: pointer;
+}
+
+.fila:first-child{
+    margin-top: 45px;    
+}
+
+.resultados{
+    margin-top: 25%;
 }
