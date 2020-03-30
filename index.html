@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Tateti</title>
+</head>
+<body>
+    <div id="app">
+        <div class="header">
+            <h1>TA-TE-TI</h1>
+        </div>
+
+          <div class="inicio">
+            <div class="contenido">
+                <p> Eligue tu modo de juego. </p>
+                <br>
+                <button class="modoSolo" @click="cambiarEstado('mostrarTablero')"> Modo solitario </button>
+                <button class="modoVs"> 1 VS 1 </button>
+            </div>
+                <tablero></tablero>
+          </div>
+    </div>
+
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script>
+
+// modificar componente para que sea compatible con el tablero de juego que ingluya el tablero de juego y que diga de quien turno es cada uno
+
+        Vue.component('tablero', {
+        data() {
+            return {
+                // estado: "default",
+                // nuevoEstado: ""
+           }
+         },
+        template:
+         `
+         <div class="contenedorTablero" v-if=" estado === 'mostrarTablero'">
+            <div class="celda"> h</div>
+            <div class="celda"> h</div>
+            <div class="celda"> h</div>
+
+            <div class="celda"> h</div>
+            <div class="celda"> h</div>
+            <div class="celda"> h</div>
+
+            <div class="celda"> h</div>
+            <div class="celda"> h</div>
+            <div class="celda"> h</div>
+         </div>
+          `
+        //   methods: {
+        //       cambiarEstado: function (nuevoEstado) {
+        //           this.estado = nuevoEstado;
+        //           this.nuevoEstado = "";
+        //       }
+        //   }
+        })
+
+    // componente que muestre si gano O o X o si se empató, ademas de boton de jugar otra vez con reload
+
+    // Vue.component('tablero', {
+        // data() {
+        //     return {
+        //     titulo: 'TA-TE-TI'
+        //     }
+        //  },
+        // template:
+        //  `
+        //     <div class="tablero">
+                
+        //     </div>
+        //   `
+        // })
+
+         const app = new Vue({
+                el:"#app",
+                data: {
+                    estado: "default",
+                    nuevoEstado: ""
+                },
+                methods: {
+                    cambiarEstado: function(nuevoEstado){
+                        this.estado = nuevoEstado;
+                        this.nuevoEstado = "";
+                    }
+                }
+            })
+
+    </script>
+
+</body>
+</html>

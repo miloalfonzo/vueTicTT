@@ -1,0 +1,42 @@
+*{
+    margin: 0;
+    padding:0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+.header{
+    font-size: 35px;
+    background: #ce6868;
+    color:white;
+}
+
+.inicio  {
+    background-color: rgb(197, 89, 105);
+    margin-top: 20px;
+    height: 400px;
+    width:50%;
+    border-radius: 5%;
+    display: inline-block
+}
+
+.contenido{
+    color: white;
+   margin-top: 16%;
+   font-size: 35px;
+   font-weight: bold;
+}
+
+.modoSolo, .modoVs{
+    padding: 20px;
+    border-radius: 3%;
+    border: none;
+    cursor: pointer;
+    font-size: 23px;
+    margin: 4px 0 0 4px;
+}
+
+.celda{
+    background-color:rgb(20, 11, 11);
+}
