@@ -11,16 +11,17 @@
     font-size: 35px;
     background: #ce6868;
     color:white;
+    margin-bottom: 20px;
 }
 
-.inicio  {
-    background-color: rgb(197, 89, 105);
-    margin-top: 20px;
-    height: 400px;
-    width:40%;
-    border-radius: 5%;
-    color: white;
-    display: inline-block;
+.contenedorTablero {
+    margin-top: 50px;
+    height: 50%;
+    width: 30%;
+    border-radius: 5%; 
+    display: inline-flex;
+    justify-content: center;
+   
 } 
 
 .contenido{
@@ -39,21 +40,49 @@
     margin: 4px 0 0 4px;
 }
 
-
-.celda{
-    display: inline-block;
-    width: 100px;
-    height: 100px;
-    justify-content: center;
-    align-items: center;
-    background: white;
+table{
+    position: relative;
+    top:50%;
     cursor: pointer;
+  
+    
+   
 }
 
-.fila:first-child{
-    margin-top: 45px;    
+th{
+    width:100px;
+    height: 100px;
+    
 }
 
-.resultados{
-    margin-top: 25%;
+table {
+    border-collapse: collapse;
+  }
+  table td, table th {
+    border: 5px solid #f08a8a;
+  }
+  table tr:first-child th {
+    border-top: 0;
+  }
+  table tr th:first-child {
+    border-left: 0;
+  }
+  table tr th:last-child {
+    border-right: 0;
+  }
+  table tr:last-child th{
+    border-bottom: 0;
+  }
+
+.turno{
+	color: #af7b7b;
+    display: inline;
+    padding: 30px;
+
 }
+.noturno{
+	color: #d68577;
+    display: inline;
+    padding: 30px;
+}
+
