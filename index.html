@@ -12,17 +12,16 @@
             <h1>TA-TE-TI</h1>
         </div>
 
-        <div class="inicio">
-            
-            <!-- <div class="contenido" ></div>
+        <!-- <div class="inicio" v-if="estado == 'none'">
+             <div class="contenido"></div>
                 <h1> Eligue tu modo de juego. </h1>
                 <br>
-                  <button class="modoSolo" @click="cambiarEstado()"> Modo solitario </button>
-                <button class="modoVs" @click="cambiarEstado()" >  1 VS 1 </button>
-            </div>   -->
-
+                  <button class="modoSolo" @click="cambiarEstado('otro')"> Modo solitario </button>
+                <button class="modoVs" @click="cambiarEstado('otro')" >  1 VS 1 </button>
+            </div>     -->
+            
              <tablero></tablero>  
-           <!-- <resultados></resultados>   -->
+            
         </div>
 
     </div>
@@ -35,142 +34,79 @@
     <script>
         Vue.component('tablero', {
         template:
-        `
-                <div class="contenedorTablero" v-else>
-                    <div class="fila">
-                        <div class="celda" value="disponible"><fichas/></div>
-                        <div class="celda " value="disponible"><fichas/></div>
-                        <div class="celda " value="disponible"><fichas/></div>
-                    </div>
-                    <div class="fila">
-                        <div class="celda " value="disponible"><fichas/></div>
-                        <div class="celda " value="disponible"><fichas/></div>
-                        <div class="celda " value="disponible"><fichas/></div>
-                    </div>
-                    <div class="fila">
-                        <div class="celda " value="disponible"><fichas/></div>
-                        <div class="celda " value="disponible"><fichas/></div>
-                        <div class="celda " value="disponible"><fichas/></div>
-                    </div>
-                    <p id="texto"> Es el turno del jugador   </p>
-                </div>
-          `,
-         props: {
-           
-         }
-        })
-    </script>
 
-     <!-- componente de resultados -->
+        `<div>
+ 
+        <div v-bind:class="{ganador: bloqueo, noGanador: !bloqueo}">
+			<jugadorXGana v-if="ganador=='X'"></jugadorXGana>
+			<jugadorOGana v-if="ganador=='O'"></jugadorOGana>
+			<empate v-if="empate==true"></empate>
+		</div>
 
-    <script>
-
-    Vue.component("resultados", {
-        template:
-        // crear un v-if para que la pantalla solo aparezca en caso de que se haya ganado o empatado,
-        //agregar resultados dinamicamente,
-        //agregar una function de reload al button
-        `
-            <div class="resultados" >
-                <h1> Resultados </h1>
-                <button class="repetirJuego"> Volver a jugar </button>
+        
+        <div class="tableroDePuntos">
+                <h4 v-bind:class="{turno: x, noturno: !x}">Turno de</h4>
             </div>
-        `,
-        props:{
 
-        }
+        <div class="contenedorTablero">
+            <table>
+		        <tr>
+                    <th v-for="lu in dividirLugares(0, 3)" class="bloque" v-on:click="revisar(lu)">
+                        <p v-if="lugares.lugar == 'X'"> </p>
+                        <p v-if="lugares.lugar == 'O'"> </p>
+                    </th>
+                </tr>
+		        <tr>
+                    <th v-for="lu in dividirLugares(3, 6)" class="bloque" v-on:click="revisar(lu)">
+                        <p v-if="lugares.lugar == 'X'">  </p>
+                        <p v-if="lugares.lugar == 'O'"> </p>
+                    </th>
+                </tr>
+                <tr>
+                    <th v-for="lu in dividirLugares(6, 9)" class="bloque" v-on:click="revisar(lu)">
+                        <p v-if="lugares.lugar == 'X'"> </p>
+                        <p v-if="lugares.lugar == 'O'">  </p>
+                    </th>
+                </tr>
+            </table>
 
-    })
+           
+            </div>
 
-    </script>
-
-    <!-- componente de fichas -->
-    <script>
-    Vue.component("fichas", {
-        // crear la logica para que se muevan las fichas,
-        // crear componente de x u o y que se muestren dinamicamente segun el click
-        template: `
-            <p v-if="lugares.lugar ==  'x'""> X </p>
-            <p v-else="lugares.lugar ==  'o'""> O </p>
-
-            `
-    })
-
-    </script>
-
-
-  <script>
-    const app = new Vue({
-        // crear variables y datos de juego,
-       // plantear el modo jugador vs maquina
-       // crear componente de jugadores
-        el:"#app",
-       
-        data: {
-            mostrarTablero: 'none',
-            // combinaciones: [
-            //     [0, 1 ,2],
-            //     [3, 4, 5],
-            //     [6, 7, 8],
-            //     [0, 3, 6],
-            //     [1, 4, 7],
-            //     [2, 5, 8],
-            //     [0, 4, 8],
-            //     [2, 4, 6]
-            // ],
-            lugares: [
-                {lugar:0},
-                {lugar:1},
-                {lugar:2},
-                {lugar:3},
-                {lugar:4},
-                {lugar:5},
-                {lugar:6},
-                {lugar:7},
-                {lugar:8}
-            ],
-            inicio: false,
-            turno:0,
-            tablero: new Array(document.getElementsByClassName("celda")),
-            click: document.getElementsByClassName("celda"),
-            jugador1Gana: 0,
-            jugador2Gana: 0,
-            jugadores: {
-                    jugador1: "x",
-                    jugador2:"o"
-            }
-        },
-        methods: {
-                cambiarEstado: function(){
-                    this.mostrarTablero = true;
-                },
-                 
-                seleccionarModo: function (){
-                    // if (estado == "mostrarTablero1"){
-                    //     // modo de juego solitario
-                    // } else if (estado == "mostrarTablero2"){
-                    //     //logica del juego vs cpu
-                    // }
-                },
-                mostrarFicha: function (){
-                    //mostrar y mover ficha
-                },
-                comenzar: function() {
-                    this.inicio = true;
-                    this.turno = 1;
-                    this.jugadores = jugador1;
-                },
-                colocar: function(tablero){
-                    if (inicio == true){
-                        if(turno == 1 && tablero.value == "disponible"){
-                           this.turno = 2;
-                           this.jugadores = jugador2;
-
-                        }
-                    }
-                },
-                ganar: function(){
-                    if(this.lugares[0].lugar == this.lugares[1].lugar && this.lugares[2].lugar
+            <div v-bind:class="{button_div: bloqueo, disabled: !bloqueo}">
+                <button v-on:click="jugarDenuevo">Volver a jugar</button>
+            </div>
+            
+            </div>
+          `,
+          data(){
+              return{
+                  x:false,
+                  o: false,
+                  ganador: "ninguno",
+                  empate: false,
+                  jugadorOGana: 0,
+                  jugadorXGana: 0,
+                  bloqueo:false,
+                lugares: [
+                    {lugar:0},
+                    {lugar:1},
+                    {lugar:2},
+                    {lugar:3},
+                    {lugar:4},
+                    {lugar:5},
+                    {lugar:6},
+                    {lugar:7},
+                    {lugar:8}
+                    ]
+              }
+          },
+         methods:{
+            dividirLugares: function(inicio, final){
+			return this.lugares.slice(inicio, final);
+             },
+             ganar: function (){
+                if(this.lugares[0].lugar == this.lugares[1].lugar && this.lugares[2].lugar
                     || this.lugares[3].lugar == this.lugares[4].lugar && this.lugares[5].lugar
                     || this.lugares[6].lugar == this.lugares[7].lugar && this.lugares[8].lugar
                     || this.lugares[0].lugar == this.lugares[3].lugar && this.lugares[6].lugar
@@ -179,15 +115,123 @@
                     || this.lugares[0].lugar == this.lugares[4].lugar && this.lugares[8].lugar
                     || this.lugares[2].lugar == this.lugares[4].lugar && this.lugares[6].lugar
                     ){
-                        if(this.jugadores == jugador1){
-                            jugador1 = true;
-                            jugador1Gana++;
-                        }else{
-                            jugador2 = true;
-                            jugador2Gana++;
+                    if(this.lugares[0].lugar == this.lugares[1].lugar && this.lugares[1].lugar == this.lugares[2].lugar){
+					    this.ganador = this.lugares[1].lugar;
+				    }else if(this.lugares[3].lugar == this.lugares[4].lugar && this.lugares[4].lugar == this.lugares[5].lugar){
+					    this.ganador = this.lugares[4].lugar;
+				    }else if(this.lugares[6].lugar == this.lugares[7].lugar && this.lugares[7].lugar == this.lugares[8].lugar){
+					    this.ganador = this.lugares[7].lugar;
+				    }else if(this.lugares[0].lugar == this.lugares[3].lugar && this.lugares[3].lugar == this.lugares[6].lugar){
+					    this.ganador = this.lugares[3].lugar;
+				    }else if(this.lugares[1].lugar == this.lugares[4].lugar && this.lugares[4].lugar == this.lugares[7].lugar){
+					    this.ganador = this.lugares[4].lugar;
+				    }else if(this.lugares[2].lugar == this.lugares[5].lugar && this.lugares[5].lugar == this.lugares[8].lugar){
+					    this.ganador = this.lugares[5].lugar;
+				    }else if(this.lugares[0].lugar == this.lugares[4].lugar && this.lugares[4].lugar == this.lugares[8].lugar){
+					    this.ganador = this.lugares[4].lugar;
+				    }else{
+					    this.ganador = this.lugares[2].lugar;
+				    }
+				if(this.ganador == "O"){
+					this.o = true;
+					this.jugadorOGana++;
+				}else{
+					this.o = false;
+					this.jugadorXGana++;
+				}
+				this.bloqueo = true;
+			    }else{
+				return false;
+			    }
+             },  
+             revisar: function(lu) {
+                 if(lu.lugar != "X" && lu.lugar != "O" && this.bloqueo == false){
+                     if(this.x == true){
+                         lu.lugar = "X";
+                            this.empatar();
+                            this.ganar();
+                     }
+                 }
+             },
+            jugarDenuevo: function(){
+                 let lugares = this.lugares;
+                 if(this.bloqueo == true){
+                     this.bloqueo = false;
+                     for(var i=0; i>this.lugares.length; i++){
+                         lugares[i].lugar = i + 1;
                         }
+                        this.o = false;
+                        this.ganador = "b";
+                        this.empate = false;
+                     }
+                 },
+            empatar: function () {
+                let x = 9;
+                for(var i = 0; i<this.lugares.length; i++){
+                    if(Number(this.lugares[i].lugar) == true){
+                        --x;
                     }
+                } if (x==0 && this.ganar() == false){
+                    this.bloqueo = true;
+                    this.empate = true;
                 }
+            }
+        
+             }
+     })
+
+    </script>
+
+    <!-- componentes de fichas -->
+    <script>
+    
+    Vue.component("fichaX", {
+        template: `
+        
+            <h1 > X </h1>
+        
+            `
+    })
+
+    Vue.component("fichaO", {
+        template: `
+       
+            <h1 > O </h1>
+        
+            `
+    })
+
+    </script>
+
+    <script>
+    Vue.component('jugadorXGana',{
+	    template: '<fichaX><fichaX> Es el ganador'
+
+    });
+
+    Vue.component('jugadorOGana',{
+	    template:'<fichaO> </fichaO> es el ganador.'
+    });
+    Vue.component('empate',{
+	    template:'<h1>Empate!</h1>'
+    });
+
+
+    </script>
+
+  <script>
+    const app = new Vue({
+        el:"#app",
+       
+        data: {
+            estado: 'none'
+        },
+        methods: {
+                cambiarEstado: function(nuevoEstado){
+                    this.estado = nuevoEstado;
+                    nuevoEstado = "";
+                }
+                
             }
         })
 
