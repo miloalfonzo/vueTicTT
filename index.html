@@ -12,84 +12,184 @@
             <h1>TA-TE-TI</h1>
         </div>
 
-          <div class="inicio">
-            <div class="contenido">
-                <p> Eligue tu modo de juego. </p>
+        <div class="inicio">
+            
+            <!-- <div class="contenido" ></div>
+                <h1> Eligue tu modo de juego. </h1>
                 <br>
-                <button class="modoSolo" @click="cambiarEstado('mostrarTablero')"> Modo solitario </button>
-                <button class="modoVs"> 1 VS 1 </button>
-            </div>
-                <tablero></tablero>
-          </div>
+                  <button class="modoSolo" @click="cambiarEstado()"> Modo solitario </button>
+                <button class="modoVs" @click="cambiarEstado()" >  1 VS 1 </button>
+            </div>   -->
+
+             <tablero></tablero>  
+           <!-- <resultados></resultados>   -->
+        </div>
+
     </div>
 
     <!-- development version, includes helpful console warnings -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
+    <!-- componente del tablero -->
+
+    <script>
+        Vue.component('tablero', {
+        template:
+        `
+                <div class="contenedorTablero" v-else>
+                    <div class="fila">
+                        <div class="celda" value="disponible"><fichas/></div>
+                        <div class="celda " value="disponible"><fichas/></div>
+                        <div class="celda " value="disponible"><fichas/></div>
+                    </div>
+                    <div class="fila">
+                        <div class="celda " value="disponible"><fichas/></div>
+                        <div class="celda " value="disponible"><fichas/></div>
+                        <div class="celda " value="disponible"><fichas/></div>
+                    </div>
+                    <div class="fila">
+                        <div class="celda " value="disponible"><fichas/></div>
+                        <div class="celda " value="disponible"><fichas/></div>
+                        <div class="celda " value="disponible"><fichas/></div>
+                    </div>
+                    <p id="texto"> Es el turno del jugador   </p>
+                </div>
+          `,
+         props: {
+           
+         }
+        })
+    </script>
+
+     <!-- componente de resultados -->
+
     <script>
 
-// modificar componente para que sea compatible con el tablero de juego que ingluya el tablero de juego y que diga de quien turno es cada uno
-
-        Vue.component('tablero', {
-        data() {
-            return {
-                // estado: "default",
-                // nuevoEstado: ""
-           }
-         },
+    Vue.component("resultados", {
         template:
-         `
-         <div class="contenedorTablero" v-if=" estado === 'mostrarTablero'">
-            <div class="celda"> h</div>
-            <div class="celda"> h</div>
-            <div class="celda"> h</div>
+        // crear un v-if para que la pantalla solo aparezca en caso de que se haya ganado o empatado,
+        //agregar resultados dinamicamente,
+        //agregar una function de reload al button
+        `
+            <div class="resultados" >
+                <h1> Resultados </h1>
+                <button class="repetirJuego"> Volver a jugar </button>
+            </div>
+        `,
+        props:{
 
-            <div class="celda"> h</div>
-            <div class="celda"> h</div>
-            <div class="celda"> h</div>
+        }
 
-            <div class="celda"> h</div>
-            <div class="celda"> h</div>
-            <div class="celda"> h</div>
-         </div>
-          `
-        //   methods: {
-        //       cambiarEstado: function (nuevoEstado) {
-        //           this.estado = nuevoEstado;
-        //           this.nuevoEstado = "";
-        //       }
-        //   }
-        })
+    })
 
-    // componente que muestre si gano O o X o si se empató, ademas de boton de jugar otra vez con reload
+    </script>
 
-    // Vue.component('tablero', {
-        // data() {
-        //     return {
-        //     titulo: 'TA-TE-TI'
-        //     }
-        //  },
-        // template:
-        //  `
-        //     <div class="tablero">
-                
-        //     </div>
-        //   `
-        // })
+    <!-- componente de fichas -->
+    <script>
+    Vue.component("fichas", {
+        // crear la logica para que se muevan las fichas,
+        // crear componente de x u o y que se muestren dinamicamente segun el click
+        template: `
+            <p v-if="lugares.lugar ==  'x'""> X </p>
+            <p v-else="lugares.lugar ==  'o'""> O </p>
 
-         const app = new Vue({
-                el:"#app",
-                data: {
-                    estado: "default",
-                    nuevoEstado: ""
+            `
+    })
+
+    </script>
+
+
+  <script>
+    const app = new Vue({
+        // crear variables y datos de juego,
+       // plantear el modo jugador vs maquina
+       // crear componente de jugadores
+        el:"#app",
+       
+        data: {
+            mostrarTablero: 'none',
+            // combinaciones: [
+            //     [0, 1 ,2],
+            //     [3, 4, 5],
+            //     [6, 7, 8],
+            //     [0, 3, 6],
+            //     [1, 4, 7],
+            //     [2, 5, 8],
+            //     [0, 4, 8],
+            //     [2, 4, 6]
+            // ],
+            lugares: [
+                {lugar:0},
+                {lugar:1},
+                {lugar:2},
+                {lugar:3},
+                {lugar:4},
+                {lugar:5},
+                {lugar:6},
+                {lugar:7},
+                {lugar:8}
+            ],
+            inicio: false,
+            turno:0,
+            tablero: new Array(document.getElementsByClassName("celda")),
+            click: document.getElementsByClassName("celda"),
+            jugador1Gana: 0,
+            jugador2Gana: 0,
+            jugadores: {
+                    jugador1: "x",
+                    jugador2:"o"
+            }
+        },
+        methods: {
+                cambiarEstado: function(){
+                    this.mostrarTablero = true;
                 },
-                methods: {
-                    cambiarEstado: function(nuevoEstado){
-                        this.estado = nuevoEstado;
-                        this.nuevoEstado = "";
+                 
+                seleccionarModo: function (){
+                    // if (estado == "mostrarTablero1"){
+                    //     // modo de juego solitario
+                    // } else if (estado == "mostrarTablero2"){
+                    //     //logica del juego vs cpu
+                    // }
+                },
+                mostrarFicha: function (){
+                    //mostrar y mover ficha
+                },
+                comenzar: function() {
+                    this.inicio = true;
+                    this.turno = 1;
+                    this.jugadores = jugador1;
+                },
+                colocar: function(tablero){
+                    if (inicio == true){
+                        if(turno == 1 && tablero.value == "disponible"){
+                           this.turno = 2;
+                           this.jugadores = jugador2;
+
+                        }
+                    }
+                },
+                ganar: function(){
+                    if(this.lugares[0].lugar == this.lugares[1].lugar && this.lugares[2].lugar
+                    || this.lugares[3].lugar == this.lugares[4].lugar && this.lugares[5].lugar
+                    || this.lugares[6].lugar == this.lugares[7].lugar && this.lugares[8].lugar
+                    || this.lugares[0].lugar == this.lugares[3].lugar && this.lugares[6].lugar
+                    || this.lugares[1].lugar == this.lugares[4].lugar && this.lugares[7].lugar
+                    || this.lugares[2].lugar == this.lugares[5].lugar && this.lugares[8].lugar
+                    || this.lugares[0].lugar == this.lugares[4].lugar && this.lugares[8].lugar
+                    || this.lugares[2].lugar == this.lugares[4].lugar && this.lugares[6].lugar
+                    ){
+                        if(this.jugadores == jugador1){
+                            jugador1 = true;
+                            jugador1Gana++;
+                        }else{
+                            jugador2 = true;
+                            jugador2Gana++;
+                        }
                     }
                 }
-            })
+            }
+        })
 
     </script>
 
