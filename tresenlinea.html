@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css">
+            *{
+            margin: 0;
+            padding:0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            
+        }
+
+        .header{
+            font-size: 35px;
+            background: #ce6868;
+            color:white;
+            margin-bottom: 10px;
+        }
+
+        .inicio{
+            background: rgb(250, 244, 244);
+            color: #ce6868;
+            width: 50%;
+            border-radius: 3%;
+            display:inline-block;
+        }
+
+        .inicio h1{
+            margin-top: 15px;
+        }
+
+        .contenedorTablero {
+            margin-top: 20px;
+            height: 50%;
+            width: 30%;
+            border-radius: 5%; 
+            display: inline-flex;
+            justify-content: center;
+        
+        } 
+
+        table, th, td {
+            background-color: rgb(212, 101, 101);
+            border: 3px solid rgb(255, 252, 253);
+            border-collapse: collapse;
+            font-size: 70px;
+            cursor: pointer;
+        }
+            
+        td {
+            height: 110px;
+            width: 110px;
+            text-align: center;
+            color: rgb(255, 255, 255);
+            }
+            
+        td:hover{
+            background-color: #e78e7c;
+            }
+            
+        #pantallaJuego {
+            display: block;
+            }
+            
+        #cambiarTexto {
+            text-align: center;
+            }
+            
+        #anuncioResultado {
+            color: #D74F33;
+            font-size: 16px;
+            }
+
+        button {
+            margin-top: 10px;
+            padding: 15px;
+            font-size: 15px;
+            color: #ce6868 ;
+            font-weight: bold;
+            background: #ecd6d0;
+            border: 1px solid #ca6c57;
+            border-radius: 5%;
+            cursor: pointer;
+            margin-bottom: 15px;
+            }
+
+        button:hover{
+            background: white;
+            }   
+    </style>
+
+
+    <title>Ta-te-ti</title>
+</head>
+<body>
+    <div id="app">
+        <div class="header">
+            <h1>TA-TE-TI</h1>
+        </div>
+
+      <div class="inicio" v-if="estado === 'default' ">
+             <div class="contenido" ></div>
+                <h1> Elegí tu modo de juego. </h1>
+                <br>
+                <button class="modoSolo" @click="cambiarEstado('mostrarJuego')"> Solo mode </button>
+                <button class="modoVs" @click="cambiarEstado('mostrarJuego')" >  1 VS 1 </button>
+            </div>     
+            
+         <tablero v-if="estado === 'mostrarJuego'"></tablero>
+            
+        </div>
+
+    </div>
+
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script>
+        Vue.component('tablero', {
+        template:`
+        <div id="pantallaJuego">
+            <button class="btn" @click="comenzarJuego"> Comenzar a jugar </button>
+            <div id="cambiarTexto">
+              <div class="turno" v-if="!fin">
+                <h3>Es el turno de: </h3>
+                <h2 v-if="esX">X</h2>
+                <h2 v-if="!esX">O</h2>
+              </div>
+              <div  id="anuncioResultado">
+                <h3> Ganador: </h3>
+                <h2> {{ ganador }} </h2>
+              </div>
+
+            <div class="contenedorTablero">
+                <table>       
+                    <tr v-for="(row, rowKey) in tab">
+                    <td v-for="(item, key) in row" v-on:click="function(){cambiarBloque(rowKey, key); resultadoGanador(rowKey, key)}">{{ item }}</td>
+                    </tr>
+                </table>
+            </div>
+            <br/>
+            <button v-on:click="volverAJugar()">Volver a jugar</button>
+            </div> 
+        </div>
+          `,
+          data(){
+              return{
+                esX: true,
+                ganador: "",
+                fin:false,
+                tab: [
+                    [
+                    "", "", ""
+                    ],
+                    [
+                    "", "", ""
+                    ],
+                    [
+                    "", "", ""
+                    ]
+                    ]
+                }
+            },
+            methods: {
+                cambiarBloque: function (rowKey, key) {
+                    if(this.tab[rowKey] [key] === " " && !this.fin){
+                    if(this.esX){
+                    this.tab[rowKey] [key] = "X"
+                    } else {
+                            this.tab[rowKey] [key] = "O"
+                    }
+                    this.esX = !this.esX;
+                    this.$forceUpdate();
+                    }
+                },
+                comenzarJuego: function(){
+                    this.tab = [[" "," ", " "],[" "," ", " "],[" "," ", " "]];
+                    this.esX = true;
+                    this.ganador = "";
+                    this.fin = false;
+                },
+                volverAJugar: function(){
+                    location.reload();
+                },
+                resultadoGanador: function (rowKey, key){
+                    let tablero = this.tab;
+                    let fila = tablero[rowKey];
+                    if (fila[0] === fila[1] && fila[1] === fila[2]) {
+                        this.ganador = fila[0];
+                    } else
+                    if (tablero[0][key] === tablero[1][key] && tablero[1][key] === tablero[2][key]){
+                        this.ganador = tablero[0][key];
+                    } else
+                    if (tablero[0][0] === tablero[1][1] && tablero[1][1] === tablero[2][2]){
+                        this.ganador = tablero[0][0];
+                    }else if (tablero[2][0] === tablero[1][1] && tablero[1][1] === tablero[0][2]) {
+                        this.ganador = tablero[2][0];
+                    } else if (this.ganador == " " ) {
+                    this.ganador = "No hay, es empate."
+                    }
+                }
+            } 
+        })
+
+    
+    const app = new Vue({
+        el:"#app",
+        data:{
+            estado: 'default' 
+            },
+        methods: {
+            cambiarEstado: function (nuevoEstado){
+                this.estado = nuevoEstado;
+                nuevoEstado = "";
+            }
+        }
+    })
+
+    </script>
+
+</body>
+</html>
